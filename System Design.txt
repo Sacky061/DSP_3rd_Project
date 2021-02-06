@@ -1,0 +1,130 @@
+Student doesn't need to login to apply
+Then they get a student number if not a student and they create login 
+credentials stored to login Table
+
+*****STUDENT******
+a)studentOptions() (function in **userInterface.bal** consumer client)
+	{i}apply() 
+		****used for when prospective student wants to apply to NUST
+			#prompt user for input
+				--Surnamme
+				--First Name(s)
+				--Student Number (if a former student)
+				--ID No
+				--Date of Birth
+				--Study Level (Honors/MAsters/PhD)
+				--Research Topic
+			#send the informstion to **applicationForm.bal** consumer, which
+			checks in the database if such a student exists or if the 
+			research topic is already taken. If not, commit to database. 
+			the service (**applicationForm.bal^^) then sends response to the 
+			**userInterface.bal** via it's producer. The response is either 
+			"Successful" or "Failed, topic already taken" or
+			"Failed, student already exists"
+
+			#**userInterface.bal** displays the results to the user. if 
+			application was commited, display "Application form 
+			successfully submitted to the Nust FCI" and call 
+			studentOptions(), else display the error message and ask
+			student to fill in form again
+
+	{ii} interviewInvite()
+		***used to send and receive interview invites
+			#if there is no interview invite from FIC, display nothing,
+			else show a message "You have been invited for interview
+			at Nust FIC on *insert date* at *insert time*. For information
+			call the NUST FIC".  (this message will always be displayed on 
+			the top right of the User Interface
+
+	{ii} applicationStatus()
+		****used for when student wants to check his application status
+			#**userInterface.bal** sends a read request to 
+			**applicationStatus.bal** its consumer service querries 
+			the database to see the status (if changed by FIC) of the
+			application and its producer sends the result to 
+			**userInterface.bal**,the result is either
+			a) not available yet, if not changed; b) Accepted or
+			c)Rejected, depending on the status. **userInterface**
+			displays the results. call studentOptions()
+
+	{iii} proposalPresentation()
+		***deals with presentations
+			[[[On lrcture side:#**presentationInvite.bal** updates the student table by 
+			inserting the presenatation date into the table using 
+			studentNumber and presentationDate attributes, and inform
+			the lecturer if update is successful.]]]
+			when student requests to see if he is invited, the 
+			**interviewDate.bal** file will querry database and return
+			the presantation date to the student (**userInterface,bal**) 
+			via its producer. if there is no date set, send "No presenation
+			invite yet" to user.
+
+	{iii} proposalResults()
+		***deals with results of the presentation proposal
+
+	{iii} submitProposal()
+		***for student to submit proposal
+			#**userInterface.bal** prompts user to upload file
+			(in this case, provide file location), sends file to
+			**submitProposal.bal**, which sends back the result of the
+			commit, if result is a)Failed -- we call submiProposal()
+			again, else if result is successful, we display "Proposal
+			successfully submitted" and call studentOptions()
+
+	{iv} proposalResults()
+		***for student to see  if the proposal is accepted or rejected
+			#**userInterface** receives queery from student and 
+			send a request to **proposalResults.bal** which querries
+			the databse using studentNumber and proposalResult 
+			varibales to see if the proposal is rejected or accepted.
+			producer send a "Proposal Accepted" or "Proposal Rejected"
+			response to **userInterface.bal** which displays the 
+			results
+
+	{v} submitThesis()
+		***For submitting final thesis
+			#**userInterface.bal** prompts user to upload file
+			(in this case, provide file location), sends file to
+			**submitThesis.bal**, which sends back the result of the
+			commit, if result is a)Failed -- we display error message
+			and then we call submiThesis() again, else if result is
+			successful, we display "Final Thesis successfully 
+			submitted" and call studentOptions()
+
+	{vi} thesisResults()
+		***For checking results of the thesis
+			#**userInterface** receives queery from student and 
+			send a request to **thesisResults.bal** which querries
+			the databse using studentNumber and thesisResult 
+			varibales to see if the thesis is rejected or accepted.
+			producer send a "Thesis Accepted" or "Thesis Rejected"
+			response to **userInterface.bal** which displays the 
+			results
+	{vii} interviewInvite()
+		***For inviting student to interview
+			
+
+==============DATABASE=============
+
+--Student Table--
+int studentNumber PK
+var Surname NOT NULL
+var firtsNames NOT NULL
+int idNumber	NOT NULL
+date DOB	NOT NULL
+var studyLevel NOT NULL
+var researchTopic NOT NULL
+var applicationStatus NULL
+date presentationDate NULL
+var presentationResult NULL
+file proposal NULL
+itn potentialSupervisor FK (We use the Lecturer's staffID) NULL
+var proposalResult NULL
+file thesis NULL
+var thesisResult NULL
+
+--Login Table--
+int registrationNumber PK
+var Password NOT NULL
+			
+			
