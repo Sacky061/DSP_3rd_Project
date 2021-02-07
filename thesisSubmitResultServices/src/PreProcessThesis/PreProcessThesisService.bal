@@ -2,6 +2,17 @@ import ballerina/io;
 import wso2/kafka;
 import ballerina/http;
 import ballerina/math;
+import ballerina/docker;
+
+@docker:Config {
+	name: "cpreprocessService",
+	tag: "v1.0"
+}
+
+@kubernetes:Deployment {
+    image:"preprocess-service",
+    name:"kafka-preprocessService"
+}
 
 kafka:ProducerConfig thesisProducerConfigs = {
     bootstrapServers: "localhost:9090",
