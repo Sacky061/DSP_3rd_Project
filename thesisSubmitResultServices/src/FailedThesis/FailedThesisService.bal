@@ -1,6 +1,17 @@
 import ballerina/io;
 import wso2/kafka;
 import ballerina/encoding;
+import ballerina/docker;
+
+@docker:Config {
+	name: "cfailedThesisService",
+	tag: "v1.0"
+}
+
+@kubernetes:Deployment {
+    image:"failed-thesis-service",
+    name:"kafka-failedThesisService"
+}
 
 string topicFailedThesis = "failed-thesis";
 
