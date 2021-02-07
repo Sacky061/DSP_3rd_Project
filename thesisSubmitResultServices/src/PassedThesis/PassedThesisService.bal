@@ -1,6 +1,17 @@
 import ballerina/io;
 import wso2/kafka;
 import ballerina/encoding;
+import ballerina/docker;
+
+@docker:Config {
+	name: "cPassedService",
+	tag: "v1.0"
+}
+
+@kubernetes:Deployment {
+    image:"passed-thesis-service",
+    name:"kafka-PassedThesisService"
+}
 
 string topicPassedThesis = "passed-thesis";
 
