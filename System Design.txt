@@ -28,23 +28,19 @@ a)studentOptions() (function in **userInterface.bal** consumer client)
 			studentOptions(), else display the error message and ask
 			student to fill in form again
 
-	{ii} interviewInvite()
-		***used to send and receive interview invites
-			#if there is no interview invite from FIC, display nothing,
-			else show a message "You have been invited for interview
-			at Nust FIC on *insert date* at *insert time*. For information
-			call the NUST FIC".  (this message will always be displayed on 
-			the top right of the User Interface
+	
 
-	{ii} applicationStatus()
+	{ii} applicationStatus() (also deals with interview invites)
+		#The lecturer interview
 		****used for when student wants to check his application status
+			#Lecturer/HOD update the applicationStatus column once a student is to be invited/or not for an INTERVIEW
 			#**userInterface.bal** sends a read request to 
 			**applicationStatus.bal** its consumer service querries 
 			the database to see the status (if changed by FIC) of the
 			application and its producer sends the result to 
 			**userInterface.bal**,the result is either
 			a) not available yet, if not changed; b) Accepted or
-			c)Rejected, depending on the status. **userInterface**
+			c)Rejected, depending on the status. OR D) iNVITED FOR INTERVIEW ON (INSERT DATE) **userInterface**
 			displays the results. call studentOptions()
 
 	{iii} proposalPresentation()
