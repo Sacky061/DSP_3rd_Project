@@ -1,6 +1,17 @@
 import ballerina/io;
 import wso2/kafka;
 import ballerina/encoding;
+import ballerina/docker;
+
+@docker:Config {
+	name: "cfilterService",
+	tag: "v1.0"
+}
+
+@kubernetes:Deployment {
+    image:"filter-service",
+    name:"kafka-filterService"
+}
 
 string topicVerifiedThesis = "pre-verified-thesis";
 string topicFailedThesis = "failed-thesis";
